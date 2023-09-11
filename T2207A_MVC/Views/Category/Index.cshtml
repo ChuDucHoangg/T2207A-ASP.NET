@@ -1,0 +1,33 @@
+﻿@model List<T2207A_MVC.Entities.Category>
+@{
+//var abc = ViewData["categories"];
+//var xyz = ViewBag.categories;
+}
+<h1>Category Table</h1>
+<a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+    Create new Category
+</a>
+<div class="col-6">
+    <table class="table">
+        <thead>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Action</th>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+                {
+                    <tr>
+                        <td>@item.id</td>
+                        <td>@item.name</td>
+                        <td>
+                            <a href="@Url.ActionLink("Edit","Category",new {id=item.id})" class="btn btn-info">Edit</a>
+                            <a href="@Url.ActionLink("Delete","Category",new {id=item.id})"
+                               onclick="return confirm('Xac nhan xoa @item.name')"
+                               class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+</div>

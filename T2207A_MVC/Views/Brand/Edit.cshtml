@@ -1,0 +1,28 @@
+﻿@model T2207A_MVC.Models.BrandEditModel;
+@{
+    ViewData["Title"] = "Edit brand";
+}
+
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                @using (Html.BeginForm("Edit", "Brand", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.id)
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.name, new { @class = "col-sm-2 col-form-label" })
+                        @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.name, "", new { @class = "text-danger" })
+
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update @Model.name</button>
+                    <a href="/brand" class="btn btn-success">List brand</a>
+                }
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+</section>

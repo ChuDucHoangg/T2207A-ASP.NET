@@ -1,0 +1,43 @@
+﻿@model List<T2207A_MVC.Entities.Product>
+@{
+
+}
+
+<h1>Product Table</h1>
+<a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+    Create new Product
+</a>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Image</th>
+            <th scope="col">Category</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>@item.id</th>
+                <td>@item.name</td>
+                <td>@item.price</td>
+                <td>@item.description</td>
+                <td>mdo</td>
+                <td>@item.category.name</td>
+                <td>@item.brand.name</td>
+                <td>
+                    <a href="@Url.ActionLink("Edit","Product",new {id=item.id})" class="btn btn-primary">Edit</a>
+                    <a href="@Url.ActionLink("Delete","Product",new {id=item.id})"
+                       onclick="return confirm('Xac nhan xoa @item.name')" class="btn btn-warning">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
