@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col"></div>
             <div class="col">
-                @using (Html.BeginForm("Edit", "Product", FormMethod.Post))
+                @using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.HiddenFor(m => m.id)
                     <div class="mb-3">
@@ -28,6 +28,11 @@
                         @Html.LabelFor(m => m.description, new { @class = "col-sm-2 col-form-label" })
                         @Html.TextBoxFor(m => m.description, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.description, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class=" row mb-3">
+                        <label>Upload</label>
+                        <input type="file" name="ImageFile" class="form-control" />
                     </div>
 
                     <div class="row mb-3">

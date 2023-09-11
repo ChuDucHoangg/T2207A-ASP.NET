@@ -13,9 +13,12 @@ namespace T2207A_MVC.Controllers
     {
         private readonly DataContext _context;
 
-        public BrandController(DataContext context)
+        private readonly IWebHostEnvironment webHostEnvironment;
+
+        public BrandController(DataContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            webHostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -29,12 +32,31 @@ namespace T2207A_MVC.Controllers
             return View();
         }
 
+        private string UploadLogo(IFormFile logoFile)
+        {
+            if (logoFile != null && logoFile.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + logoFile.FileName;
+                string logoPath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(logoPath, FileMode.Create))
+                {
+                    logoFile.CopyTo(fileStream);
+                }
+
+                return uniqueFileName;
+            }
+            return null;
+        }
+
         [HttpPost]
         public IActionResult Create(BrandViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Brands.Add(new Brand { name = model.name });
+                string logoPath = UploadLogo(model.LogoFile);
+                _context.Brands.Add(new Brand { name = model.name, logo = logoPath });
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -57,7 +79,8 @@ namespace T2207A_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Brands.Update(new Brand { id = model.id, name = model.name });
+                string logoPath = UploadLogo(model.LogoFile);
+                _context.Brands.Update(new Brand { id = model.id, name = model.name, logo = logoPath });
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }

@@ -10,24 +10,28 @@
 <div class="col-6">
     <table class="table">
         <thead>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Action</th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Icon</th>
+        <th>Action</th>
         </thead>
         <tbody>
-            @foreach(var item in Model)
-                {
-                    <tr>
-                        <td>@item.id</td>
-                        <td>@item.name</td>
-                        <td>
-                            <a href="@Url.ActionLink("Edit","Category",new {id=item.id})" class="btn btn-info">Edit</a>
-                            <a href="@Url.ActionLink("Delete","Category",new {id=item.id})"
-                               onclick="return confirm('Xac nhan xoa @item.name')"
-                               class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.name</td>
+                    <td>
+                        <img src="~/uploads/@item.icon" width="80px" height="40px" alt="" />
+                    </td>
+                    <td>
+                        <a href="@Url.ActionLink("Edit","Category",new {id=item.id})" class="btn btn-info">Edit</a>
+                        <a href="@Url.ActionLink("Delete","Category",new {id=item.id})"
+                           onclick="return confirm('Xac nhan xoa @item.name')"
+                           class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

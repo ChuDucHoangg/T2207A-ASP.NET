@@ -12,7 +12,11 @@ namespace T2207A_MVC.Entities
 		[Required]
 		public string name { get; set; }
 
-		public ICollection<Product> products { get; set; }
+        [Required]
+        [StringLength(200)]
+        public string icon { get; set; }
+
+        public ICollection<Product> products { get; set; }
 	}
 }
 

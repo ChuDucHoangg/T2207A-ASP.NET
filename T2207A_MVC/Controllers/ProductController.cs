@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Hosting;
 using T2207A_MVC.Entities;
 using T2207A_MVC.Models;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,9 +16,12 @@ namespace T2207A_MVC.Controllers
     {
         private readonly DataContext _context;
 
-        public ProductController(DataContext context)
+        private readonly IWebHostEnvironment webHostEnvironment;
+
+        public ProductController(DataContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            webHostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -47,19 +52,39 @@ namespace T2207A_MVC.Controllers
             ViewBag.brand_id = new SelectList(brands, "id", "name");
             if (ModelState.IsValid)
             {
+                string imagePath = UploadImage(model.ImageFile);
                 _context.Products.Add(new Product
                 {
                     name = model.name,
                     price = model.price,
                     description = model.description,
                     category_id = model.category_id,
-                    brand_id = model.brand_id
+                    brand_id = model.brand_id,
+                    image = imagePath 
                 });
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(model);
 
+        }
+
+        private string UploadImage(IFormFile imageFile)
+        {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                string imagePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    imageFile.CopyTo(fileStream);
+                }
+
+                return uniqueFileName;
+            }
+            return null;
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -95,6 +120,7 @@ namespace T2207A_MVC.Controllers
             ViewBag.brand_id = new SelectList(brands, "id", "name");
             if (ModelState.IsValid)
             {
+                string imagePath = UploadImage(model.ImageFile);
                 _context.Products.Update(new Product
                 {
                     id = model.id,
@@ -102,7 +128,8 @@ namespace T2207A_MVC.Controllers
                     price = model.price,
                     description = model.description,
                     category_id = model.category_id,
-                    brand_id = model.brand_id
+                    brand_id = model.brand_id,
+                    image = imagePath
                 });
                 _context.SaveChanges();
                 return RedirectToAction("Index");

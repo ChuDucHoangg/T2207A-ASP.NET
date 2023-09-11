@@ -13,9 +13,12 @@ namespace T2207A_MVC.Controllers
     {
         private readonly DataContext _context;
 
-        public CategoryController(DataContext context)
+        private readonly IWebHostEnvironment webHostEnvironment;
+
+        public CategoryController(DataContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            webHostEnvironment = hostEnvironment;
         }
 
         // GET: /<controller>/
@@ -32,12 +35,31 @@ namespace T2207A_MVC.Controllers
             return View();
         }
 
+        private string UploadIcon(IFormFile iconFile)
+        {
+            if (iconFile != null && iconFile.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + iconFile.FileName;
+                string iconPath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(iconPath, FileMode.Create))
+                {
+                    iconFile.CopyTo(fileStream);
+                }
+
+                return uniqueFileName;
+            }
+            return null;
+        }
+
         [HttpPost]
         public IActionResult Create(CategoryViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Categories.Add(new Category { name = model.name });
+                string iconPath = UploadIcon(model.IconFile);
+                _context.Categories.Add(new Category { name = model.name, icon = iconPath });
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -60,7 +82,8 @@ namespace T2207A_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Categories.Update(new Category { id = model.id, name = model.name });
+                string iconPath = UploadIcon(model.IconFile);
+                _context.Categories.Update(new Category { id = model.id, name = model.name, icon = iconPath });
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }

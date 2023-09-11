@@ -9,7 +9,7 @@
             <div class="col"></div>
             <div class="col">
                 <h1>Add Product</h1>
-                @using (Html.BeginForm("Create", "Product", FormMethod.Post))
+                @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     <div class="row mb-3">
                         @Html.LabelFor(m => m.name, new { @class = "col-sm-2 col-form-label" })
@@ -27,6 +27,11 @@
                         @Html.LabelFor(m => m.description, new { @class = "col-sm-2 col-form-label" })
                         @Html.TextBoxFor(m => m.description, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.description, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class=" row mb-3">
+                        <label>Upload</label>
+                        <input type="file" name="ImageFile" class="form-control" />
                     </div>
 
                     <div class="row mb-3">

@@ -11,6 +11,8 @@ namespace T2207A_MVC.Models
         public string name { get; set; }
         public double price { get; set; }
         public string description { get; set; }
+        [Display(Name = "Image")]
+        public IFormFile ImageFile { get; set; }
         [Display(Name = "Category")]
         public int category_id { get; set; }
         [Display(Name = "Brand")]
