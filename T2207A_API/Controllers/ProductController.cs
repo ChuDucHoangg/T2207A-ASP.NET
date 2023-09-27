@@ -54,6 +54,33 @@ namespace T2207A_API.Controllers
             return NotFound();
         }
 
+        [HttpGet]
+        [Route("get-by-category")]
+        public IActionResult GetByCategory(int categoryId)
+        {
+            try
+            {
+                List<Product> products = _context.Products.Where(p => p.CategoryId == categoryId).ToList();
+                List<ProductDTO> data = products.Select(p => new ProductDTO
+                {
+                    id = p.Id,
+                    name = p.Name,
+                    price = p.Price,
+                    description = p.Description,
+                    thumbnail = p.Thumbnail,
+                    qty = p.Qty,
+                    CategoryId = p.CategoryId
+                }).ToList();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         [HttpPost]
         public IActionResult Create(CreateProduct model)
         {
